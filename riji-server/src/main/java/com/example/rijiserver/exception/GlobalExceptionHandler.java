@@ -1,11 +1,8 @@
 package com.example.rijiserver.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,31 +21,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+    @ExceptionHandler(NotLoginException.class)
+    public ResponseEntity<Map<String, String>> handleNotLogin(NotLoginException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("message", "用户名或密码错误");
+        error.put("message", "请先登录");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUsernameNotFound(UsernameNotFoundException ex) {
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Map<String, String>> handleAuth(AuthException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("message", "用户不存在");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
-    @ExceptionHandler(LockedException.class)
-    public ResponseEntity<Map<String, String>> handleLocked(LockedException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", "账号已被锁定");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<Map<String, String>> handleDisabled(DisabledException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", "账号已被禁用");
+        error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 

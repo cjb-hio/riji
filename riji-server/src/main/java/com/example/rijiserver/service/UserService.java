@@ -1,6 +1,7 @@
 package com.example.rijiserver.service;
 
 import com.example.rijiserver.document.User;
+import com.example.rijiserver.exception.AuthException;
 import com.example.rijiserver.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,15 @@ public class UserService {
 
         User user = new User(username, passwordEncoder.encode(password), email);
         return userRepository.save(user);
+    }
+
+    public User login(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthException("用户名或密码错误"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new AuthException("用户名或密码错误");
+        }
+        return user;
     }
 
     public User findByUsername(String username) {

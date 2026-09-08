@@ -1,12 +1,10 @@
 package com.example.rijiserver.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.example.rijiserver.dto.SyncRequest;
 import com.example.rijiserver.dto.SyncResponse;
-import com.example.rijiserver.security.AuthUser;
 import com.example.rijiserver.service.SyncService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,18 +19,10 @@ public class SyncController {
 
     @PostMapping
     public ResponseEntity<SyncResponse> sync(
-            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody SyncRequest request
     ) {
-        String userId = getUserId(userDetails);
+        String userId = StpUtil.getLoginIdAsString();
         SyncResponse response = syncService.sync(userId, request);
         return ResponseEntity.ok(response);
-    }
-
-    private String getUserId(UserDetails userDetails) {
-        if (userDetails instanceof AuthUser authUser) {
-            return authUser.getUserId();
-        }
-        return userDetails.getUsername();
     }
 }
