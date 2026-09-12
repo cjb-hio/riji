@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.example.rijiserver.document.Diary;
 import com.example.rijiserver.dto.DiaryRequest;
 import com.example.rijiserver.dto.DiaryResponse;
+import com.example.rijiserver.dto.PageResponse;
 import com.example.rijiserver.service.DiaryService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -12,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/diaries")
@@ -26,26 +25,24 @@ public class DiaryController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getDiaries(
+    public ResponseEntity<PageResponse<DiaryResponse>> getDiaries(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) String mood
     ) {
+        if (page < 0) {
+            throw new IllegalArgumentException("page must be greater than or equal to 0");
+        }
+        if (size < 1 || size > 100) {
+            throw new IllegalArgumentException("size must be between 1 and 100");
+        }
+
         String userId = StpUtil.getLoginIdAsString();
-        size = Math.min(size, 100);
 
         Page<Diary> diaryPage = diaryService.getDiaries(userId, page, size, startDate, endDate, mood);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", diaryPage.getContent().stream().map(DiaryResponse::new));
-        response.put("page", diaryPage.getNumber());
-        response.put("size", diaryPage.getSize());
-        response.put("totalElements", diaryPage.getTotalElements());
-        response.put("totalPages", diaryPage.getTotalPages());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(PageResponse.from(diaryPage.map(DiaryResponse::new)));
     }
 
     @GetMapping("/{id}")
@@ -65,11 +62,9 @@ public class DiaryController {
         String userId = StpUtil.getLoginIdAsString();
         Diary diary = diaryService.createDiary(
                 userId,
-                request.getClientId(),
                 request.getTitle(),
                 request.getContent(),
-                request.getMood(),
-                null
+                request.getMood()
         );
         return ResponseEntity.ok(new DiaryResponse(diary));
     }

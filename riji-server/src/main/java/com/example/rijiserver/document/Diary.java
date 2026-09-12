@@ -16,9 +16,6 @@ public class Diary {
     @Id
     private String id;
 
-    @Indexed
-    private String clientId;
-
     private String title;
 
     private String content;
@@ -45,14 +42,6 @@ public class Diary {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     public String getTitle() {

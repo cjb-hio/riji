@@ -6,7 +6,6 @@ import java.time.Instant;
 
 public class DiaryResponse {
 
-    private String clientId;
     private String serverId;
     private String title;
     private String content;
@@ -19,7 +18,6 @@ public class DiaryResponse {
     }
 
     public DiaryResponse(Diary diary) {
-        this.clientId = diary.getClientId();
         this.serverId = diary.getId();
         this.title = diary.getTitle();
         this.content = diary.getContent();
@@ -27,14 +25,6 @@ public class DiaryResponse {
         this.createdAt = diary.getCreatedAt();
         this.updatedAt = diary.getUpdatedAt();
         this.deleted = diary.isDeleted();
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     public String getServerId() {

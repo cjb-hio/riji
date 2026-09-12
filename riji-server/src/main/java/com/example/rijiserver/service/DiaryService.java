@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,14 +22,13 @@ public class DiaryService {
         this.diaryRepository = diaryRepository;
     }
 
-    public Diary createDiary(String userId, String clientId, String title, String content, String mood, Instant createdAt) {
+    public Diary createDiary(String userId, String title, String content, String mood) {
         Diary diary = new Diary();
-        diary.setClientId(clientId);
         diary.setTitle(title);
         diary.setContent(content);
         diary.setMood(mood);
         diary.setUserId(userId);
-        diary.setCreatedAt(createdAt != null ? createdAt : Instant.now());
+        diary.setCreatedAt(Instant.now());
         diary.setUpdatedAt(Instant.now());
         diary.setDeleted(false);
         return diaryRepository.save(diary);
@@ -47,14 +45,18 @@ public class DiaryService {
         if (startDate != null && endDate != null) {
             Instant start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
             Instant end = endDate.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+            if (mood != null && !mood.isBlank()) {
+                return diaryRepository.findByUserIdAndMoodAndUpdatedAtBetweenAndDeletedFalse(
+                        userId, mood, start, end, pageable);
+            }
             return diaryRepository.findByUserIdAndUpdatedAtBetweenAndDeletedFalse(userId, start, end, pageable);
         }
 
-        return diaryRepository.findByUserIdAndDeletedFalse(userId, pageable);
-    }
+        if (mood != null && !mood.isBlank()) {
+            return diaryRepository.findByUserIdAndMoodAndDeletedFalse(userId, mood, pageable);
+        }
 
-    public List<Diary> getChangedSince(String userId, Instant since) {
-        return diaryRepository.findByUserIdAndUpdatedAtAfterAndDeletedFalse(userId, since);
+        return diaryRepository.findByUserIdAndDeletedFalse(userId, pageable);
     }
 
     public Diary updateDiary(Diary diary, String title, String content, String mood) {
@@ -69,9 +71,5 @@ public class DiaryService {
         diary.setDeleted(true);
         diary.setUpdatedAt(Instant.now());
         diaryRepository.save(diary);
-    }
-
-    public Optional<Diary> findByClientIdAndUserId(String clientId, String userId) {
-        return diaryRepository.findByClientIdAndUserId(clientId, userId);
     }
 }
