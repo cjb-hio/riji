@@ -20,13 +20,11 @@ class DiaryListResponse {
 
   factory DiaryListResponse.fromJson(Map<String, dynamic> json) {
     return DiaryListResponse(
-      content: (json['content'] as List)
-          .map((e) => Diary.fromJson(e))
-          .toList(),
-      page: json['page'],
-      size: json['size'],
-      totalElements: json['totalElements'],
-      totalPages: json['totalPages'],
+      content: (json['content'] as List).map((e) => Diary.fromJson(e as Map<String, dynamic>)).toList(),
+      page: (json['page'] as num).toInt(),
+      size: (json['size'] as num).toInt(),
+      totalElements: (json['totalElements'] as num).toInt(),
+      totalPages: (json['totalPages'] as num).toInt(),
     );
   }
 }
@@ -54,10 +52,7 @@ class DiaryRepository {
     String? mood,
   }) async {
     try {
-      final queryParams = <String, dynamic>{
-        'page': page,
-        'size': size,
-      };
+      final queryParams = <String, dynamic>{'page': page, 'size': size};
       if (startDate != null) queryParams['startDate'] = startDate;
       if (endDate != null) queryParams['endDate'] = endDate;
       if (mood != null) queryParams['mood'] = mood;
@@ -82,7 +77,7 @@ class DiaryRepository {
     }
   }
 
-  Future<Diary> createDiary(Diary diary) async {
+  Future<Diary> createDiary(DiaryRequest diary) async {
     try {
       final response = await _apiClient.post('/diaries', data: diary.toJson());
       return Diary.fromJson(response.data);
@@ -93,13 +88,9 @@ class DiaryRepository {
     }
   }
 
-  Future<Diary> updateDiary(String serverId, Diary diary) async {
+  Future<Diary> updateDiary(String serverId, DiaryRequest diary) async {
     try {
-      final response = await _apiClient.put('/diaries/$serverId', data: {
-        'title': diary.title,
-        'content': diary.content,
-        'mood': diary.mood,
-      });
+      final response = await _apiClient.put('/diaries/$serverId', data: diary.toJson());
       return Diary.fromJson(response.data);
     } on DioException catch (e) {
       throw ApiException(_parseErrorMessage(e), statusCode: e.response?.statusCode);

@@ -1,0 +1,633 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "API Documentation",
+    "version" : "1.0"
+  },
+  "paths" : {
+    "/api/auth/register" : {
+      "post" : {
+        "summary" : "register",
+        "description" : "register",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "required" : [ "email", "password", "username" ],
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "maxLength" : 50,
+                    "minLength" : 3,
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "email" : {
+                    "maxLength" : 100,
+                    "type" : "string",
+                    "description" : "",
+                    "format" : "email"
+                  },
+                  "password" : {
+                    "maxLength" : 100,
+                    "minLength" : 6,
+                    "type" : "string",
+                    "description" : ""
+                  }
+                },
+                "description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "token" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "tokenType" : {
+                      "type" : "string",
+                      "description" : "",
+                      "default" : "Bearer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login" : {
+      "post" : {
+        "summary" : "login",
+        "description" : "login",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "required" : [ "password", "username" ],
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "description" : ""
+                  }
+                },
+                "description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "token" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "tokenType" : {
+                      "type" : "string",
+                      "description" : "",
+                      "default" : "Bearer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/diaries" : {
+      "get" : {
+        "summary" : "getDiaries",
+        "description" : "getDiaries",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "nullable" : false,
+            "default" : "0"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "nullable" : false,
+            "default" : "20"
+          }
+        }, {
+          "name" : "startDate",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "nullable" : false
+          }
+        }, {
+          "name" : "endDate",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "nullable" : false
+          }
+        }, {
+          "name" : "mood",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "nullable" : false
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "content" : {
+                      "type" : "array",
+                      "description" : "",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "serverId" : {
+                            "type" : "string",
+                            "description" : ""
+                          },
+                          "title" : {
+                            "type" : "string",
+                            "description" : ""
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "description" : ""
+                          },
+                          "mood" : {
+                            "type" : "string",
+                            "description" : ""
+                          },
+                          "createdAt" : {
+                            "type" : "object",
+                            "properties" : {
+                              "seconds" : {
+                                "type" : "integer",
+                                "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                                "format" : "int64"
+                              },
+                              "nanos" : {
+                                "type" : "integer",
+                                "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                              }
+                            },
+                            "description" : ""
+                          },
+                          "updatedAt" : {
+                            "type" : "object",
+                            "properties" : {
+                              "seconds" : {
+                                "type" : "integer",
+                                "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                                "format" : "int64"
+                              },
+                              "nanos" : {
+                                "type" : "integer",
+                                "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                              }
+                            },
+                            "description" : ""
+                          },
+                          "deleted" : {
+                            "type" : "boolean",
+                            "description" : ""
+                          }
+                        },
+                        "description" : "com.example.rijiserver.dto.DiaryResponse"
+                      }
+                    },
+                    "page" : {
+                      "type" : "integer",
+                      "description" : ""
+                    },
+                    "size" : {
+                      "type" : "integer",
+                      "description" : ""
+                    },
+                    "totalElements" : {
+                      "type" : "integer",
+                      "description" : "",
+                      "format" : "int64"
+                    },
+                    "totalPages" : {
+                      "type" : "integer",
+                      "description" : ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "createDiary",
+        "description" : "createDiary",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "required" : [ "title" ],
+                "type" : "object",
+                "properties" : {
+                  "title" : {
+                    "maxLength" : 200,
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "content" : {
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "mood" : {
+                    "type" : "string",
+                    "description" : ""
+                  }
+                },
+                "description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "serverId" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "title" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "content" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "mood" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "createdAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "updatedAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "deleted" : {
+                      "type" : "boolean",
+                      "description" : ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/diaries/{id}" : {
+      "get" : {
+        "summary" : "getDiary",
+        "description" : "getDiary",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "serverId" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "title" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "content" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "mood" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "createdAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "updatedAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "deleted" : {
+                      "type" : "boolean",
+                      "description" : ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "updateDiary",
+        "description" : "updateDiary",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "required" : [ "title" ],
+                "type" : "object",
+                "properties" : {
+                  "title" : {
+                    "maxLength" : 200,
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "content" : {
+                    "type" : "string",
+                    "description" : ""
+                  },
+                  "mood" : {
+                    "type" : "string",
+                    "description" : ""
+                  }
+                },
+                "description" : ""
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "serverId" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "title" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "content" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "mood" : {
+                      "type" : "string",
+                      "description" : ""
+                    },
+                    "createdAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "updatedAt" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                          "format" : "int64"
+                        },
+                        "nanos" : {
+                          "type" : "integer",
+                          "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+                        }
+                      },
+                      "description" : ""
+                    },
+                    "deleted" : {
+                      "type" : "boolean",
+                      "description" : ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "deleteDiary",
+        "description" : "deleteDiary",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "java.time.Instant" : {
+        "type" : "object",
+        "properties" : {
+          "seconds" : {
+            "type" : "integer",
+            "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+            "format" : "int64"
+          },
+          "nanos" : {
+            "type" : "integer",
+            "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+          }
+        },
+        "description" : ""
+      },
+      "com.example.rijiserver.dto.DiaryResponse" : {
+        "type" : "object",
+        "properties" : {
+          "serverId" : {
+            "type" : "string",
+            "description" : ""
+          },
+          "title" : {
+            "type" : "string",
+            "description" : ""
+          },
+          "content" : {
+            "type" : "string",
+            "description" : ""
+          },
+          "mood" : {
+            "type" : "string",
+            "description" : ""
+          },
+          "createdAt" : {
+            "type" : "object",
+            "properties" : {
+              "seconds" : {
+                "type" : "integer",
+                "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                "format" : "int64"
+              },
+              "nanos" : {
+                "type" : "integer",
+                "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+              }
+            },
+            "description" : ""
+          },
+          "updatedAt" : {
+            "type" : "object",
+            "properties" : {
+              "seconds" : {
+                "type" : "integer",
+                "description" : "The number of seconds from the epoch of 1970-01-01T00:00:00Z.",
+                "format" : "int64"
+              },
+              "nanos" : {
+                "type" : "integer",
+                "description" : "The number of nanoseconds, later along the time-line, from the seconds field.\nThis is always positive, and never exceeds 999,999,999."
+              }
+            },
+            "description" : ""
+          },
+          "deleted" : {
+            "type" : "boolean",
+            "description" : ""
+          }
+        },
+        "description" : "com.example.rijiserver.dto.DiaryResponse"
+      }
+    }
+  }
+}
