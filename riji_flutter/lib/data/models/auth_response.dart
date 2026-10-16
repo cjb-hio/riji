@@ -6,8 +6,8 @@ class AuthResponse {
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
-      token: json['token'],
-      tokenType: json['tokenType'],
+      token: json['token'] as String,
+      tokenType: json['tokenType'] as String? ?? 'Bearer',
     );
   }
 }

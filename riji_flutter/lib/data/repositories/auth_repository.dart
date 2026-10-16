@@ -15,6 +15,13 @@ class AuthRepository {
         return data['message'];
       }
     }
+    if (error is DioException && error.type == DioExceptionType.connectionError) {
+      final message = error.message ?? '';
+      if (message.contains('Failed host lookup')) {
+        return '无法解析服务器地址，请检查网络或稍后重试';
+      }
+      return '无法连接服务器，请检查网络或稍后重试';
+    }
     return error.toString();
   }
 

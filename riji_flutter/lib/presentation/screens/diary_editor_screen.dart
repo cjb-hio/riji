@@ -54,19 +54,14 @@ class _DiaryEditorScreenState extends State<DiaryEditorScreen> {
     setState(() => _isSaving = true);
 
     try {
-      final now = DateTime.now();
-      final diary = Diary(
-        clientId: widget.diary?.clientId,
-        serverId: widget.diary?.serverId,
+      final diary = DiaryRequest(
         title: _titleController.text.trim(),
         content: _contentController.text.trim(),
         mood: _selectedMood,
-        createdAt: widget.diary?.createdAt ?? now,
-        updatedAt: now,
       );
 
       if (_isEditing) {
-        await _diaryRepository.updateDiary(widget.diary!.serverId!, diary);
+        await _diaryRepository.updateDiary(widget.diary!.serverId, diary);
       } else {
         await _diaryRepository.createDiary(diary);
       }
@@ -78,7 +73,7 @@ class _DiaryEditorScreenState extends State<DiaryEditorScreen> {
     } catch (e) {
       Get.snackbar('错误', '保存失败，请稍后重试', snackPosition: SnackPosition.BOTTOM);
     } finally {
-      setState(() => _isSaving = false);
+      if (mounted) setState(() => _isSaving = false);
     }
   }
 
@@ -105,12 +100,12 @@ class _DiaryEditorScreenState extends State<DiaryEditorScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _diaryRepository.deleteDiary(widget.diary!.serverId!);
+      await _diaryRepository.deleteDiary(widget.diary!.serverId);
       Get.back(result: true);
       Get.snackbar('成功', '日记已删除', snackPosition: SnackPosition.BOTTOM);
     } on ApiException catch (e) {
       Get.snackbar('错误', e.message, snackPosition: SnackPosition.BOTTOM);
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

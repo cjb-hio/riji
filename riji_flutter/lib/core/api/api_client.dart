@@ -2,7 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiClient {
-  static const String baseUrl = 'http://192.168.0.41:8080/api';
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://riji.991217655.xyz/api',
+  );
   static const String tokenKey = 'auth_token';
 
   late final Dio _dio;
